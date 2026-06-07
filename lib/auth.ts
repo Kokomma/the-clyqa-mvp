@@ -17,7 +17,7 @@ export async function registerUser(
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(credential.user, { displayName });
 
-  const userData: Omit<User, 'createdAt'> & { createdAt: ReturnType<typeof serverTimestamp> } = {
+  const userData = {
     uid: credential.user.uid,
     email,
     displayName,
