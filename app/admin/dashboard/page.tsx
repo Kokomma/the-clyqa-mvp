@@ -52,8 +52,8 @@ export default function AdminDashboard() {
   return (
     <DashboardLayout>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Platform overview and management</p>
+        <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+        <p className="text-zinc-400 mt-1">Platform overview and management</p>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -61,21 +61,21 @@ export default function AdminDashboard() {
           title="Total Users"
           value={stats.totalUsers}
           icon={Users}
-          iconColor="text-blue-600"
+          iconColor="text-blue-400"
           subtitle={`${stats.pendingCreators} pending approval`}
         />
         <StatCard
           title="Total Campaigns"
           value={stats.totalCampaigns}
           icon={Megaphone}
-          iconColor="text-green-600"
+          iconColor="text-green-400"
           subtitle={`${stats.pendingCampaigns} pending review`}
         />
         <StatCard
           title="Total Withdrawals"
           value={formatCurrency(stats.totalWithdrawals)}
           icon={DollarSign}
-          iconColor="text-yellow-600"
+          iconColor="text-yellow-400"
           subtitle={`${stats.pendingWithdrawals} pending`}
         />
       </div>
@@ -83,22 +83,22 @@ export default function AdminDashboard() {
       {/* Pending Alerts */}
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
         {[
-          { label: 'Pending Creator Approvals', count: stats.pendingCreators, href: '/admin/users', color: 'border-blue-300 bg-blue-50 dark:bg-blue-900/10' },
-          { label: 'Campaigns Awaiting Review', count: stats.pendingCampaigns, href: '/admin/campaigns', color: 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/10' },
-          { label: 'Pending Withdrawals', count: stats.pendingWithdrawals, href: '/admin/withdrawals', color: 'border-green-300 bg-green-50 dark:bg-green-900/10' },
+          { label: 'Pending Creator Approvals', count: stats.pendingCreators, href: '/admin/users', color: 'border-blue-500/30 bg-blue-500/5 text-blue-400' },
+          { label: 'Campaigns Awaiting Review', count: stats.pendingCampaigns, href: '/admin/campaigns', color: 'border-yellow-500/30 bg-yellow-500/5 text-yellow-400' },
+          { label: 'Pending Withdrawals', count: stats.pendingWithdrawals, href: '/admin/withdrawals', color: 'border-green-500/30 bg-green-500/5 text-green-400' },
         ].map((alert) => (
           <Link
             key={alert.href}
             href={alert.href}
-            className={`border-2 rounded-xl p-5 flex items-center justify-between transition-opacity hover:opacity-80 ${alert.color}`}
+            className={`border rounded-2xl p-5 flex items-center justify-between transition-opacity hover:opacity-80 ${alert.color}`}
           >
             <div>
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{alert.label}</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">{alert.count}</p>
+              <p className="text-sm font-medium text-zinc-300">{alert.label}</p>
+              <p className="text-3xl font-bold text-white mt-1">{alert.count}</p>
             </div>
             <div className="flex items-center gap-1">
-              <Clock size={16} className="text-gray-400" />
-              <ArrowRight size={16} className="text-gray-400" />
+              <Clock size={16} className="text-zinc-500" />
+              <ArrowRight size={16} className="text-zinc-500" />
             </div>
           </Link>
         ))}
@@ -114,12 +114,12 @@ export default function AdminDashboard() {
           <Link
             key={href}
             href={href}
-            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5 hover:shadow-md transition-shadow flex items-center gap-3"
+            className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:bg-zinc-800 transition-colors flex items-center gap-3"
           >
-            <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg text-green-600">
+            <div className="p-2 bg-zinc-800 rounded-xl text-green-400">
               <Icon size={20} />
             </div>
-            <span className="font-medium text-gray-900 dark:text-white text-sm">{label}</span>
+            <span className="font-medium text-white text-sm">{label}</span>
           </Link>
         ))}
       </div>

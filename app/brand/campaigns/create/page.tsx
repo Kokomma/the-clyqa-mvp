@@ -54,7 +54,13 @@ export default function CreateCampaignPage() {
     setSubmitting(true);
     setError('');
     try {
-      await createCampaign({
+      const rates: Record<string, number> = {};
+      if (perView) rates.perView = Number(perView);
+      if (perLike) rates.perLike = Number(perLike);
+      if (perComment) rates.perComment = Number(perComment);
+      if (fixedRate) rates.fixedRate = Number(fixedRate);
+
+      const campaignData: Record<string, unknown> = {
         brandId: user.uid,
         brandName: user.displayName,
         title,
@@ -62,17 +68,14 @@ export default function CreateCampaignPage() {
         type,
         objective,
         budget: Number(budget),
-        rates: {
-          perView: perView ? Number(perView) : undefined,
-          perLike: perLike ? Number(perLike) : undefined,
-          perComment: perComment ? Number(perComment) : undefined,
-          fixedRate: fixedRate ? Number(fixedRate) : undefined,
-        },
+        rates,
         requirements,
         platforms,
-        startDate: startDate || undefined,
-        endDate: endDate || undefined,
-      });
+      };
+      if (startDate) campaignData.startDate = startDate;
+      if (endDate) campaignData.endDate = endDate;
+
+      await createCampaign(campaignData as Parameters<typeof createCampaign>[0]);
       router.push('/brand/campaigns');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create campaign');
@@ -84,53 +87,53 @@ export default function CreateCampaignPage() {
   return (
     <DashboardLayout>
       <div className="mb-6">
-        <Link href="/brand/campaigns" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-4">
+        <Link href="/brand/campaigns" className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors mb-4">
           <ArrowLeft size={16} />
           Back to campaigns
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create Campaign</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Fill in the details to launch a new campaign</p>
+        <h1 className="text-2xl font-bold text-white">Create Campaign</h1>
+        <p className="text-zinc-400 mt-1">Fill in the details to launch a new campaign</p>
       </div>
 
       <div className="max-w-2xl">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-8">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
           {error && (
-            <div className="mb-5 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
+            <div className="mb-5 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Campaign Title *</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">Campaign Title *</label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="e.g. Summer Product Launch"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description *</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">Description *</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 rows={3}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
                 placeholder="Describe your campaign goals and brand..."
               />
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Campaign Type *</label>
+                <label className="block text-sm font-medium text-zinc-300 mb-1">Campaign Type *</label>
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value as CampaignType)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="performance">Performance (pay per engagement)</option>
                   <option value="deliverable">Deliverable (fixed per piece)</option>
@@ -138,11 +141,11 @@ export default function CreateCampaignPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Objective *</label>
+                <label className="block text-sm font-medium text-zinc-300 mb-1">Objective *</label>
                 <select
                   value={objective}
                   onChange={(e) => setObjective(e.target.value as CampaignObjective)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="awareness">Awareness (min ₦50K)</option>
                   <option value="engagement">Engagement (min ₦75K)</option>
@@ -153,55 +156,55 @@ export default function CreateCampaignPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Budget (₦) *</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">Budget (₦) *</label>
               <input
                 type="number"
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
                 required
                 min={MIN_BUDGETS[objective]}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder={`Min ₦${MIN_BUDGETS[objective].toLocaleString()}`}
               />
-              <p className="text-xs text-gray-400 mt-1">Minimum: ₦{MIN_BUDGETS[objective].toLocaleString()}</p>
+              <p className="text-xs text-zinc-500 mt-1">Minimum: ₦{MIN_BUDGETS[objective].toLocaleString()}</p>
             </div>
 
             {/* Rates */}
             <div>
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Payment Rates</p>
+              <p className="text-sm font-medium text-zinc-300 mb-3">Payment Rates</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {(type === 'performance' || type === 'hybrid') && (
                   <>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Per 1K views (₦)</label>
+                      <label className="block text-xs text-zinc-500 mb-1">Per 1K views (₦)</label>
                       <input
                         type="number"
                         value={perView}
                         onChange={(e) => setPerView(e.target.value)}
                         min={0}
-                        className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full px-3 py-2 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="50"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Per like (₦)</label>
+                      <label className="block text-xs text-zinc-500 mb-1">Per like (₦)</label>
                       <input
                         type="number"
                         value={perLike}
                         onChange={(e) => setPerLike(e.target.value)}
                         min={0}
-                        className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full px-3 py-2 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="2"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Per comment (₦)</label>
+                      <label className="block text-xs text-zinc-500 mb-1">Per comment (₦)</label>
                       <input
                         type="number"
                         value={perComment}
                         onChange={(e) => setPerComment(e.target.value)}
                         min={0}
-                        className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full px-3 py-2 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="5"
                       />
                     </div>
@@ -209,13 +212,13 @@ export default function CreateCampaignPage() {
                 )}
                 {(type === 'deliverable' || type === 'hybrid') && (
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Fixed rate (₦)</label>
+                    <label className="block text-xs text-zinc-500 mb-1">Fixed rate (₦)</label>
                     <input
                       type="number"
                       value={fixedRate}
                       onChange={(e) => setFixedRate(e.target.value)}
                       min={0}
-                      className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-3 py-2 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="5000"
                     />
                   </div>
@@ -225,7 +228,7 @@ export default function CreateCampaignPage() {
 
             {/* Platforms */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Allowed Platforms *</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">Allowed Platforms *</label>
               <div className="flex flex-wrap gap-2">
                 {PLATFORMS.map((p) => (
                   <button
@@ -234,8 +237,8 @@ export default function CreateCampaignPage() {
                     onClick={() => togglePlatform(p)}
                     className={`px-4 py-1.5 rounded-full text-sm font-medium border-2 capitalize transition-colors ${
                       platforms.includes(p)
-                        ? 'border-green-600 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
-                        : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-green-300'
+                        ? 'border-green-500 bg-green-500/10 text-green-400'
+                        : 'border-zinc-700 text-zinc-400 hover:border-zinc-500'
                     }`}
                   >
                     {p}
@@ -245,46 +248,46 @@ export default function CreateCampaignPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Requirements *</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">Requirements *</label>
               <textarea
                 value={requirements}
                 onChange={(e) => setRequirements(e.target.value)}
                 required
                 rows={3}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
                 placeholder="What should creators do? e.g. Create a 60s review video, include our product, use hashtag #ClyqaCampaign"
               />
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
+                <label className="block text-sm font-medium text-zinc-300 mb-1">Start Date</label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date</label>
+                <label className="block text-sm font-medium text-zinc-300 mb-1">End Date</label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
             </div>
 
             <div className="pt-2">
-              <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-4">
+              <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 mb-4">
                 Your campaign will be submitted for admin review before going live.
               </p>
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-green-600 text-white font-semibold py-3 rounded-xl hover:bg-green-700 disabled:opacity-60 transition-colors"
+                className="w-full bg-green-500 hover:bg-green-400 text-black font-bold py-3 rounded-xl disabled:opacity-60 transition-colors"
               >
                 {submitting ? 'Creating...' : 'Create Campaign'}
               </button>

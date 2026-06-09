@@ -48,24 +48,24 @@ export default function AdminCampaignsPage() {
   return (
     <DashboardLayout>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Campaign Management</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Review and approve campaigns</p>
+        <h1 className="text-2xl font-bold text-white">Campaign Management</h1>
+        <p className="text-zinc-500 mt-1">Review and approve campaigns</p>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search campaigns..."
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           {['all', 'pending', 'active', 'rejected', 'completed'].map((f) => (
             <option key={f} value={f}>{f}</option>
@@ -73,20 +73,20 @@ export default function AdminCampaignsPage() {
         </select>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
         {filtered.length === 0 ? (
-          <div className="p-8 text-center text-gray-500 dark:text-gray-400">No campaigns found.</div>
+          <div className="p-8 text-center text-zinc-500">No campaigns found.</div>
         ) : (
-          <div className="divide-y divide-gray-100 dark:divide-gray-700">
+          <div className="divide-y divide-zinc-800">
             {filtered.map((c) => (
               <div key={c.id} className="px-6 py-5">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">{c.title}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 capitalize">
+                    <h3 className="font-semibold text-white">{c.title}</h3>
+                    <p className="text-xs text-zinc-500 mt-0.5 capitalize">
                       {c.type} • {c.objective} • {formatCurrency(c.budget)} • {formatDate(c.createdAt)}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{c.description}</p>
+                    <p className="text-sm text-zinc-500 mt-1 line-clamp-1">{c.description}</p>
                   </div>
                   {statusBadge(c.status)}
                 </div>
@@ -96,14 +96,14 @@ export default function AdminCampaignsPage() {
                     <button
                       onClick={() => handleAction(c.id, 'active')}
                       disabled={actionLoading === c.id}
-                      className="flex items-center gap-1.5 bg-green-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-60"
+                      className="flex items-center gap-1.5 bg-green-500 hover:bg-green-400 text-black disabled:opacity-60"
                     >
                       <Check size={14} /> Approve
                     </button>
                     <button
                       onClick={() => handleAction(c.id, 'rejected')}
                       disabled={actionLoading === c.id}
-                      className="flex items-center gap-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-red-100 disabled:opacity-60"
+                      className="flex items-center gap-1.5 bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-red-500/20 disabled:opacity-60"
                     >
                       <X size={14} /> Reject
                     </button>

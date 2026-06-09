@@ -48,12 +48,12 @@ export default function BrandDashboard() {
     <DashboardLayout>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Brand Dashboard</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Track your campaigns and performance</p>
+          <h1 className="text-2xl font-bold text-white">Brand Dashboard</h1>
+          <p className="text-zinc-400 mt-1">Track your campaigns and performance</p>
         </div>
         <Link
           href="/brand/campaigns/create"
-          className="flex items-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-green-700 transition-colors text-sm"
+          className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold px-4 py-2 rounded-xl transition-colors text-sm"
         >
           <Plus size={18} />
           New Campaign
@@ -61,38 +61,38 @@ export default function BrandDashboard() {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard title="Active Campaigns" value={activeCampaigns} icon={Megaphone} iconColor="text-green-600" />
-        <StatCard title="Total Budget" value={formatCurrency(totalBudget)} icon={DollarSign} iconColor="text-cyan-600" />
-        <StatCard title="Total Spent" value={formatCurrency(totalSpent)} icon={DollarSign} iconColor="text-yellow-600" />
-        <StatCard title="Total Submissions" value={submissions.length} icon={FileText} iconColor="text-blue-600" />
+        <StatCard title="Active Campaigns" value={activeCampaigns} icon={Megaphone} iconColor="text-green-400" />
+        <StatCard title="Total Budget" value={formatCurrency(totalBudget)} icon={DollarSign} iconColor="text-cyan-400" />
+        <StatCard title="Total Spent" value={formatCurrency(totalSpent)} icon={DollarSign} iconColor="text-yellow-400" />
+        <StatCard title="Total Submissions" value={submissions.length} icon={FileText} iconColor="text-blue-400" />
       </div>
 
       {/* Campaigns List */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden mb-8">
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-          <h2 className="font-semibold text-gray-900 dark:text-white">Your Campaigns</h2>
-          <Link href="/brand/campaigns" className="text-sm text-green-600 hover:underline flex items-center gap-1">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden mb-8">
+        <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
+          <h2 className="font-semibold text-white">Your Campaigns</h2>
+          <Link href="/brand/campaigns" className="text-sm text-green-400 hover:text-green-300 transition-colors flex items-center gap-1">
             View all <ArrowRight size={14} />
           </Link>
         </div>
         {campaigns.length === 0 ? (
-          <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+          <div className="p-8 text-center text-zinc-500">
             <Megaphone size={40} className="mx-auto mb-3 opacity-30" />
             <p>No campaigns yet. Create your first campaign!</p>
-            <Link href="/brand/campaigns/create" className="mt-4 inline-block bg-green-600 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-green-700">
+            <Link href="/brand/campaigns/create" className="mt-4 inline-block bg-green-500 hover:bg-green-400 text-black px-5 py-2 rounded-xl text-sm font-bold">
               Create Campaign
             </Link>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100 dark:divide-gray-700">
+          <div className="divide-y divide-zinc-800">
             {campaigns.slice(0, 5).map((c) => (
-              <Link key={c.id} href={`/brand/campaigns/${c.id}`} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <Link key={c.id} href={`/brand/campaigns/${c.id}`} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-800/50 transition-colors">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">{c.title}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 capitalize">{c.type} • {formatDate(c.createdAt)} • {c.submissionCount ?? 0} submissions</p>
+                  <p className="font-medium text-white">{c.title}</p>
+                  <p className="text-xs text-zinc-500 mt-0.5 capitalize">{c.type} • {formatDate(c.createdAt)} • {c.submissionCount ?? 0} submissions</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-medium text-gray-700 dark:text-gray-300 text-sm">{formatCurrency(c.budget)}</span>
+                  <span className="font-medium text-zinc-300 text-sm">{formatCurrency(c.budget)}</span>
                   {statusBadge(c.status)}
                 </div>
               </Link>
@@ -103,19 +103,19 @@ export default function BrandDashboard() {
 
       {/* Recent Submissions */}
       {submissions.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-            <h2 className="font-semibold text-gray-900 dark:text-white">Recent Submissions</h2>
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-zinc-800">
+            <h2 className="font-semibold text-white">Recent Submissions</h2>
           </div>
-          <div className="divide-y divide-gray-100 dark:divide-gray-700">
+          <div className="divide-y divide-zinc-800">
             {submissions.slice(0, 5).map((sub) => (
               <div key={sub.id} className="px-6 py-4 flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{sub.creatorName ?? sub.creatorId}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{sub.campaignTitle ?? sub.campaignId} • {sub.platform}</p>
+                  <p className="text-sm font-medium text-white">{sub.creatorName ?? sub.creatorId}</p>
+                  <p className="text-xs text-zinc-500">{sub.campaignTitle ?? sub.campaignId} • {sub.platform}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-semibold text-green-600 text-sm">{formatCurrency(sub.earnings)}</span>
+                  <span className="font-semibold text-green-400 text-sm">{formatCurrency(sub.earnings)}</span>
                   {statusBadge(sub.status)}
                 </div>
               </div>

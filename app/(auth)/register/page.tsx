@@ -47,14 +47,14 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] px-4">
         <div className="w-full max-w-md text-center">
-          <CheckCircle size={64} className="text-green-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Registration submitted!</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
+          <CheckCircle size={64} className="text-green-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-2">Registration submitted!</h2>
+          <p className="text-zinc-400 mb-6">
             Your creator account is pending admin approval. You&apos;ll be able to log in once approved.
           </p>
-          <Link href="/login" className="bg-green-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-green-700 transition-colors">
+          <Link href="/login" className="bg-green-500 hover:bg-green-400 text-black font-bold px-6 py-3 rounded-xl transition-colors">
             Back to Login
           </Link>
         </div>
@@ -63,17 +63,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-green-600">Clyqa</Link>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">Create your account</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Join the performance creator marketplace</p>
+          <Link href="/" className="text-3xl font-extrabold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">Clyqa</Link>
+          <h1 className="text-2xl font-bold text-white mt-4">Create your account</h1>
+          <p className="text-zinc-400 mt-1">Join the performance creator marketplace</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
           {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
               {error}
             </div>
           )}
@@ -81,7 +81,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Role Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">I am a...</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">I am a...</label>
               <div className="grid grid-cols-2 gap-3">
                 {(['creator', 'brand'] as UserRole[]).map((r) => (
                   <button
@@ -90,42 +90,42 @@ export default function RegisterPage() {
                     onClick={() => setRole(r)}
                     className={`py-3 px-4 rounded-xl border-2 text-sm font-medium transition-all capitalize ${
                       role === r
-                        ? 'border-green-600 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
-                        : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-green-300'
+                        ? 'border-green-500 bg-green-500/10 text-green-400'
+                        : 'border-zinc-700 text-zinc-400 hover:border-zinc-500'
                     }`}
                   >
-                    {r === 'creator' ? '✨ Creator' : '🏢 Brand'}
+                    {r === 'creator' ? 'Creator' : 'Brand'}
                   </button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">Full Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                 placeholder="Jane Doe"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -133,13 +133,13 @@ export default function RegisterPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
+                  className="w-full px-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors pr-12"
                   placeholder="Min. 6 characters"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -147,7 +147,7 @@ export default function RegisterPage() {
             </div>
 
             {role === 'creator' && (
-              <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+              <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
                 Creator accounts require admin approval before access is granted.
               </p>
             )}
@@ -155,15 +155,15 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 text-white font-semibold py-3 rounded-xl hover:bg-green-700 disabled:opacity-60 transition-colors"
+              className="w-full bg-green-500 hover:bg-green-400 text-black font-bold py-3 rounded-xl disabled:opacity-60 transition-colors"
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
+          <p className="text-center text-sm text-zinc-500 mt-6">
             Already have an account?{' '}
-            <Link href="/login" className="text-green-600 font-medium hover:underline">
+            <Link href="/login" className="text-green-400 font-medium hover:text-green-300 transition-colors">
               Sign in
             </Link>
           </p>
