@@ -74,7 +74,7 @@ export interface Wallet {
   totalWithdrawn: number;
 }
 
-export type TransactionType = 'earning' | 'withdrawal' | 'refund';
+export type TransactionType = 'earning' | 'withdrawal' | 'refund' | 'topup';
 export type TransactionStatus = 'pending' | 'completed' | 'failed';
 
 export interface Transaction {

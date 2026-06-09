@@ -6,7 +6,6 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
   serverTimestamp,
   Timestamp,
   increment,
@@ -29,6 +28,10 @@ function toSubmission(id: string, data: Record<string, unknown>): Submission {
   } as Submission;
 }
 
+function sortByDate(a: Submission, b: Submission) {
+  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+}
+
 export async function createSubmission(
   data: Omit<Submission, 'id' | 'createdAt' | 'status' | 'earnings'>
 ): Promise<string> {
@@ -38,7 +41,6 @@ export async function createSubmission(
     earnings: 0,
     createdAt: serverTimestamp(),
   });
-  // increment campaign submission count
   await updateDoc(doc(db, 'campaigns', data.campaignId), {
     submissionCount: increment(1),
   });
@@ -46,29 +48,20 @@ export async function createSubmission(
 }
 
 export async function getSubmissionsByCreator(creatorId: string): Promise<Submission[]> {
-  const q = query(
-    collection(db, 'submissions'),
-    where('creatorId', '==', creatorId),
-    orderBy('createdAt', 'desc')
-  );
+  const q = query(collection(db, 'submissions'), where('creatorId', '==', creatorId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => toSubmission(d.id, d.data()));
+  return snap.docs.map((d) => toSubmission(d.id, d.data())).sort(sortByDate);
 }
 
 export async function getSubmissionsByCampaign(campaignId: string): Promise<Submission[]> {
-  const q = query(
-    collection(db, 'submissions'),
-    where('campaignId', '==', campaignId),
-    orderBy('createdAt', 'desc')
-  );
+  const q = query(collection(db, 'submissions'), where('campaignId', '==', campaignId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => toSubmission(d.id, d.data()));
+  return snap.docs.map((d) => toSubmission(d.id, d.data())).sort(sortByDate);
 }
 
 export async function getAllSubmissions(): Promise<Submission[]> {
-  const q = query(collection(db, 'submissions'), orderBy('createdAt', 'desc'));
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => toSubmission(d.id, d.data()));
+  const snap = await getDocs(collection(db, 'submissions'));
+  return snap.docs.map((d) => toSubmission(d.id, d.data())).sort(sortByDate);
 }
 
 export async function updateSubmissionMetrics(

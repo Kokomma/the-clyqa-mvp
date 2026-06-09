@@ -1,13 +1,13 @@
 import {
   doc,
   getDoc,
+  setDoc,
   updateDoc,
   addDoc,
   collection,
   getDocs,
   query,
   where,
-  orderBy,
   serverTimestamp,
   increment,
   Timestamp,
@@ -44,7 +44,38 @@ export async function getWallet(userId: string): Promise<Wallet | null> {
   return snap.data() as Wallet;
 }
 
+export async function ensureWallet(userId: string): Promise<Wallet> {
+  const existing = await getWallet(userId);
+  if (existing) return existing;
+  const wallet: Wallet = {
+    userId,
+    availableBalance: 0,
+    pendingBalance: 0,
+    totalEarned: 0,
+    totalWithdrawn: 0,
+  };
+  await setDoc(doc(db, 'wallets', userId), wallet);
+  return wallet;
+}
+
+export async function topUpWallet(userId: string, amount: number): Promise<void> {
+  await ensureWallet(userId);
+  await updateDoc(doc(db, 'wallets', userId), {
+    availableBalance: increment(amount),
+    totalEarned: increment(amount),
+  });
+  await addDoc(collection(db, 'transactions'), {
+    userId,
+    type: 'topup',
+    amount,
+    status: 'completed',
+    description: `Wallet top-up of ₦${amount.toLocaleString()}`,
+    createdAt: serverTimestamp(),
+  });
+}
+
 export async function creditEarnings(userId: string, amount: number, description: string): Promise<void> {
+  await ensureWallet(userId);
   await updateDoc(doc(db, 'wallets', userId), {
     pendingBalance: increment(amount),
     totalEarned: increment(amount),
@@ -101,36 +132,38 @@ export async function requestWithdrawal(
 }
 
 export async function getTransactions(userId: string): Promise<Transaction[]> {
-  const q = query(
-    collection(db, 'transactions'),
-    where('userId', '==', userId),
-    orderBy('createdAt', 'desc')
-  );
+  const q = query(collection(db, 'transactions'), where('userId', '==', userId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => toTransaction(d.id, d.data()));
+  return snap.docs
+    .map((d) => toTransaction(d.id, d.data()))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export async function getPendingWithdrawals(): Promise<WithdrawalRequest[]> {
-  const q = query(
-    collection(db, 'withdrawals'),
-    where('status', '==', 'pending'),
-    orderBy('createdAt', 'desc')
-  );
+  const q = query(collection(db, 'withdrawals'), where('status', '==', 'pending'));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => toWithdrawal(d.id, d.data()));
+  return snap.docs
+    .map((d) => toWithdrawal(d.id, d.data()))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export async function getAllWithdrawals(): Promise<WithdrawalRequest[]> {
-  const q = query(collection(db, 'withdrawals'), orderBy('createdAt', 'desc'));
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => toWithdrawal(d.id, d.data()));
+  const snap = await getDocs(collection(db, 'withdrawals'));
+  return snap.docs
+    .map((d) => toWithdrawal(d.id, d.data()))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export async function approveWithdrawal(withdrawalId: string, userId: string): Promise<void> {
+  const withdrawalSnap = await getDoc(doc(db, 'withdrawals', withdrawalId));
+  if (!withdrawalSnap.exists()) return;
+  const amount = withdrawalSnap.data().amount as number;
+
   await updateDoc(doc(db, 'withdrawals', withdrawalId), {
     status: 'completed',
     processedAt: serverTimestamp(),
   });
+
   const txQ = query(
     collection(db, 'transactions'),
     where('userId', '==', userId),
@@ -141,13 +174,10 @@ export async function approveWithdrawal(withdrawalId: string, userId: string): P
   for (const txDoc of txSnap.docs) {
     await updateDoc(doc(db, 'transactions', txDoc.id), { status: 'completed' });
   }
-  const withdrawalSnap = await getDoc(doc(db, 'withdrawals', withdrawalId));
-  if (withdrawalSnap.exists()) {
-    const amount = withdrawalSnap.data().amount as number;
-    await updateDoc(doc(db, 'wallets', userId), {
-      totalWithdrawn: increment(amount),
-    });
-  }
+
+  await updateDoc(doc(db, 'wallets', userId), {
+    totalWithdrawn: increment(amount),
+  });
 }
 
 export async function rejectWithdrawal(withdrawalId: string, userId: string, amount: number): Promise<void> {
@@ -155,7 +185,6 @@ export async function rejectWithdrawal(withdrawalId: string, userId: string, amo
     status: 'failed',
     processedAt: serverTimestamp(),
   });
-  // refund the amount back to available balance
   await updateDoc(doc(db, 'wallets', userId), {
     availableBalance: increment(amount),
   });

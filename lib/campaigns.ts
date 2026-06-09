@@ -7,7 +7,6 @@ import {
   getDoc,
   query,
   where,
-  orderBy,
   serverTimestamp,
   Timestamp,
 } from 'firebase/firestore';
@@ -40,27 +39,30 @@ export async function createCampaign(
 export async function getCampaignsByBrand(brandId: string): Promise<Campaign[]> {
   const q = query(
     collection(db, 'campaigns'),
-    where('brandId', '==', brandId),
-    orderBy('createdAt', 'desc')
+    where('brandId', '==', brandId)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => toCampaign(d.id, d.data()));
+  return snap.docs
+    .map((d) => toCampaign(d.id, d.data()))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export async function getActiveCampaigns(): Promise<Campaign[]> {
   const q = query(
     collection(db, 'campaigns'),
-    where('status', '==', 'active'),
-    orderBy('createdAt', 'desc')
+    where('status', '==', 'active')
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => toCampaign(d.id, d.data()));
+  return snap.docs
+    .map((d) => toCampaign(d.id, d.data()))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export async function getAllCampaigns(): Promise<Campaign[]> {
-  const q = query(collection(db, 'campaigns'), orderBy('createdAt', 'desc'));
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => toCampaign(d.id, d.data()));
+  const snap = await getDocs(collection(db, 'campaigns'));
+  return snap.docs
+    .map((d) => toCampaign(d.id, d.data()))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export async function getCampaignById(id: string): Promise<Campaign | null> {

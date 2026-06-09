@@ -3,13 +3,30 @@
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { LogOut, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { LogOut, Menu, X, Sun, Moon } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
   const { user, logout, loading } = useAuth();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dark, setDark] = useState(true);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('theme');
+    const isDark = stored ? stored === 'dark' : true;
+    setDark(isDark);
+    document.documentElement.classList.toggle('dark', isDark);
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !dark;
+    setDark(next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', next);
+    document.documentElement.style.colorScheme = next ? 'dark' : 'light';
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -27,6 +44,7 @@ export default function Navbar() {
     ? [
         { href: '/brand/dashboard', label: 'Dashboard' },
         { href: '/brand/campaigns', label: 'Campaigns' },
+        { href: '/brand/wallet', label: 'Wallet' },
       ]
     : user?.role === 'admin'
     ? [
@@ -59,9 +77,16 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {dark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             {loading ? null : user ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm text-zinc-400">{user.displayName}</span>
+                <span className="text-sm text-zinc-400 dark:text-zinc-400">{user.displayName}</span>
                 <button
                   onClick={handleLogout}
                   className="flex items-center gap-1 text-sm text-zinc-500 hover:text-red-400 transition-colors"
