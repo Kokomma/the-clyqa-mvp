@@ -173,7 +173,7 @@ export default function Home() {
               className="flex items-center gap-1.5 hover:text-white transition"
             >
               <Mail size={15} />
-              ellabuilds@outlook.com
+              ellabuild@outlook.com
             </a>
           </div>
         </div>
