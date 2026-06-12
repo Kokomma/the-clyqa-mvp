@@ -1,4 +1,4 @@
-import { Instagram, Mail } from 'lucide-react';
+import { ExternalLink, Mail } from 'lucide-react';
 import { WaitlistForm } from '@/components/WaitlistForm';
 import { HowItWorks } from '@/components/HowItWorks';
 import { FadeIn } from '@/components/FadeIn';
@@ -165,7 +165,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:text-white transition"
             >
-              <Instagram size={15} />
+              <ExternalLink size={15} />
               @clyqaa
             </a>
             <a
