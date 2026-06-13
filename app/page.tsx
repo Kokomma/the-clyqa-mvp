@@ -169,11 +169,11 @@ export default function Home() {
               @clyqaa
             </a>
             <a
-              href="mailto:hello@clyqa.com"
+              href="mailto:ellabuilds@outlook.com"
               className="flex items-center gap-1.5 hover:text-white transition"
             >
               <Mail size={15} />
-              ellabuild@outlook.com
+              hello@clyqa.com
             </a>
           </div>
         </div>
