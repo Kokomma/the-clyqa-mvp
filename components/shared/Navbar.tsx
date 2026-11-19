@@ -3,30 +3,14 @@
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { LogOut, Menu, X, Sun, Moon } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { LogOut, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import ThemeToggle from '@/components/shared/ThemeToggle';
 
 export default function Navbar() {
   const { user, logout, loading } = useAuth();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dark, setDark] = useState(true);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    const isDark = stored ? stored === 'dark' : true;
-    setDark(isDark);
-    document.documentElement.classList.toggle('dark', isDark);
-    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-  }, []);
-
-  const toggleTheme = () => {
-    const next = !dark;
-    setDark(next);
-    localStorage.setItem('theme', next ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', next);
-    document.documentElement.style.colorScheme = next ? 'dark' : 'light';
-  };
 
   const handleLogout = async () => {
     await logout();
@@ -52,6 +36,7 @@ export default function Navbar() {
         { href: '/admin/campaigns', label: 'Campaigns' },
         { href: '/admin/users', label: 'Users' },
         { href: '/admin/withdrawals', label: 'Withdrawals' },
+        { href: '/admin/waitlist', label: 'Waitlist' },
       ]
     : [];
 
@@ -77,16 +62,10 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+            <ThemeToggle />
             {loading ? null : user ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm text-zinc-400 dark:text-zinc-400">{user.displayName}</span>
+                <span className="text-sm text-zinc-400">{user.displayName}</span>
                 <button
                   onClick={handleLogout}
                   className="flex items-center gap-1 text-sm text-zinc-500 hover:text-red-400 transition-colors"
@@ -105,13 +84,17 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            className="md:hidden p-2 rounded-md text-zinc-400 hover:text-white"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile controls */}
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              className="p-2 rounded-md text-zinc-400 hover:text-white"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Open menu"
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
