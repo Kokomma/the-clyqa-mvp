@@ -8,8 +8,8 @@ import LiveCount from '@/components/waitlist/LiveCount';
 
 const features = [
   { icon: '∞', title: 'Evergreen Earnings', text: 'Eligible content can earn again within an agreed earning period, based on new approved performance.' },
-  { icon: '↻', title: 'Second Life', text: 'Brands propose funded extensions. Creators choose whether to accept the new earning and usage terms.' },
-  { icon: '↗', title: 'Your creator profile', text: 'Show your approved track record, creator level and brand feedback. Decide what you make public.' },
+  { icon: '◎', title: 'Second Life', text: 'Brands propose funded extensions. Creators choose whether to accept the new earning and usage terms.' },
+  { icon: '◆', title: 'Your creator profile', text: 'Show your approved track record, creator level and brand feedback. Decide what you make public.' },
   { icon: '◷', title: 'Monthly Drops', text: 'Discover curated collections of live campaigns. Budgets and availability come from real platform records.' },
   { icon: '✳', title: 'Clyqa Lab', text: 'Suggest what should come next and vote on moderated ideas with the community.' },
   { icon: '01', title: 'Founding creators', text: 'The first 100 confirmed creator signups receive a founding number. Referrals count after email confirmation.' },
@@ -31,7 +31,7 @@ export default function Landing() {
           <Link href="/register">Join as a brand or creator</Link>
         </nav>
         <ThemeToggle />
-        <Link href="/login">Sign in ↗</Link>
+        <Link href="/login">Sign in</Link>
       </header>
 
       <main>
@@ -56,7 +56,7 @@ export default function Landing() {
               Earn from approved views, engagement and sales — with clear rates, funded campaigns and your earnings in one place.
             </p>
             <a className="button hero-cta" href="#join">
-              Get early access ↗
+              Get early access
             </a>
             <div className="hero-tags">
               <span>Built for creators</span>
@@ -72,7 +72,6 @@ export default function Landing() {
               />
               <span>Ideas worth making. Content worth paying for.</span>
             </div>
-            <p className="fine">Illustrative photography. No endorsement or campaign results implied.</p>
           </div>
 
           <aside className="waitlist-card" id="join">
@@ -90,7 +89,7 @@ export default function Landing() {
 
         <div className="statement">
           <span>PERFORMANCE OVER POPULARITY</span>
-          <span>CREATE. SUBMIT. EARN. REPEAT. ↗</span>
+          <span>CREATE. SUBMIT. EARN. REPEAT.</span>
         </div>
 
         <section className="section" id="how">
@@ -102,17 +101,17 @@ export default function Landing() {
           </h2>
           <div className="steps">
             <article>
-              <span>01 ↗</span>
+              <span>01</span>
               <h3>Find your fit</h3>
               <p>Creators apply to live campaigns. Brands set the brief, rates, budget and usage terms.</p>
             </article>
             <article>
-              <span>02 ↗</span>
+              <span>02</span>
               <h3>Make something that works</h3>
               <p>Brands select creators. Creators make content and submit TikTok or Instagram links.</p>
             </article>
             <article>
-              <span>03 ↗</span>
+              <span>03</span>
               <h3>See what you earned</h3>
               <p>Moderated results become wallet earnings. Clear campaign caps and withdrawal rules apply.</p>
             </article>
@@ -139,7 +138,7 @@ export default function Landing() {
             ))}
           </div>
           <a className="button" href="#join">
-            Join the waitlist ↗
+            Join the waitlist
           </a>
         </section>
 
@@ -151,7 +150,7 @@ export default function Landing() {
             <em>move yours.</em>
           </h2>
           <a className="button" href="#join">
-            Get early access ↗
+            Get early access
           </a>
           <p>The public waitlist comes first. Pilot account access opens through admin approval.</p>
         </section>

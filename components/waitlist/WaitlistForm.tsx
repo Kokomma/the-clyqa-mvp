@@ -26,7 +26,6 @@ export default function WaitlistForm({ onJoined }: { onJoined?: () => void }) {
           handle: fd.get('handle') ?? '',
           category: fd.get('category') ?? '',
           website: fd.get('website') ?? '',
-          consent: fd.get('consent') === 'on',
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -92,20 +91,15 @@ export default function WaitlistForm({ onJoined }: { onJoined?: () => void }) {
       {/* Honeypot: hidden from people, bots tend to fill it in. */}
       <input className="honeypot" tabIndex={-1} aria-hidden="true" autoComplete="off" name="website" />
 
-      <label className="checkbox">
-        <input type="checkbox" name="consent" required />
-        <span>
-          Send me a welcome email and launch updates. <a href="/privacy">Privacy notice</a>
-        </span>
-      </label>
-
       <button type="submit" className="button full" disabled={busy}>
-        {busy ? 'Joining…' : 'Get early access ↗'}
+        {busy ? 'Joining…' : 'Get early access'}
       </button>
       <p className="form-message" role="status" aria-live="polite">
         {message && <span style={{ color: message.ok ? 'var(--teal)' : '#e11d48' }}>{message.text}</span>}
       </p>
-      <p className="fine">Signups are stored securely. We never share your email.</p>
+      <p className="fine">
+        By joining you agree to receive a welcome email and launch updates. <a href="/privacy">Privacy notice</a>
+      </p>
     </form>
   );
 }

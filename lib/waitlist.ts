@@ -45,7 +45,6 @@ export function validateWaitlistInput(
   if (!name || name.length > 80) return { ok: false, error: 'Please enter your name (80 characters max).' };
   if (!EMAIL_RE.test(email) || email.length > 254) return { ok: false, error: 'Please enter a valid email address.' };
   if (!role) return { ok: false, error: 'Choose whether you are a creator or a brand.' };
-  if (b.consent !== true) return { ok: false, error: 'Please tick the box to join the waitlist.' };
 
   return { ok: true, data: { name, email, role, handle, category, consent: true } };
 }
