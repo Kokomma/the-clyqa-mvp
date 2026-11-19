@@ -8,7 +8,7 @@ export interface WaitlistInput {
   role: WaitlistRole;
   handle: string;
   category: string;
-  consent: true;
+  marketing: boolean; // optional opt-in for launch and marketing emails
 }
 
 export interface WaitlistEntry {
@@ -46,7 +46,9 @@ export function validateWaitlistInput(
   if (!EMAIL_RE.test(email) || email.length > 254) return { ok: false, error: 'Please enter a valid email address.' };
   if (!role) return { ok: false, error: 'Choose whether you are a creator or a brand.' };
 
-  return { ok: true, data: { name, email, role, handle, category, consent: true } };
+  const marketing = b.marketing === true;
+
+  return { ok: true, data: { name, email, role, handle, category, marketing } };
 }
 
 // One document per email, so signing up twice never double-counts.

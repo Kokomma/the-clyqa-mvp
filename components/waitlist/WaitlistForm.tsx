@@ -26,6 +26,7 @@ export default function WaitlistForm({ onJoined }: { onJoined?: () => void }) {
           handle: fd.get('handle') ?? '',
           category: fd.get('category') ?? '',
           website: fd.get('website') ?? '',
+          marketing: fd.get('marketing') === 'on',
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -97,8 +98,12 @@ export default function WaitlistForm({ onJoined }: { onJoined?: () => void }) {
       <p className="form-message" role="status" aria-live="polite">
         {message && <span style={{ color: message.ok ? 'var(--teal)' : '#e11d48' }}>{message.text}</span>}
       </p>
+      <label className="checkbox">
+        <input type="checkbox" name="marketing" />
+        <span>Also send me launch news and marketing updates (optional).</span>
+      </label>
       <p className="fine">
-        By joining you agree to receive a welcome email and launch updates. <a href="/privacy">Privacy notice</a>
+        We&apos;ll email you to confirm your place and to invite you when early access opens. <a href="/privacy">Privacy notice</a>
       </p>
     </form>
   );

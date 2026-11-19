@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       role: data.role,
       handle: data.handle,
       category: data.category,
-      consent: true,
+      marketingOptIn: data.marketing,
       source: 'landing',
       createdAt: FieldValue.serverTimestamp(),
     });
