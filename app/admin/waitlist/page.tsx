@@ -17,6 +17,12 @@ interface WaitlistResponse {
 
 type RoleFilter = 'all' | 'creator' | 'brand';
 
+async function authHeader(): Promise<Record<string, string>> {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) throw new Error('Not signed in');
+  return { Authorization: `Bearer ${token}` };
+}
+
 export default function AdminWaitlistPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -24,6 +30,8 @@ export default function AdminWaitlistPage() {
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
+  const [inviting, setInviting] = useState(false);
+  const [notice, setNotice] = useState('');
 
   useEffect(() => {
     if (!loading && (!user || user.role !== 'admin')) router.push('/login');
@@ -57,6 +65,25 @@ export default function AdminWaitlistPage() {
     });
   }, [data, query, roleFilter]);
 
+  const sendInvites = async () => {
+    if (!window.confirm('Send the early-access email to everyone who has not received it yet?')) return;
+    setInviting(true);
+    setNotice('');
+    try {
+      const res = await fetch('/api/admin/waitlist/invite', { method: 'POST', headers: await authHeader() });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? 'Sending failed');
+      setNotice(json.sent ? `Early-access email sent to ${json.sent} people.` : 'Everyone has already been invited.');
+      setData(null); // reload the list so invited dates update
+      const r2 = await fetch('/api/admin/waitlist', { headers: await authHeader(), cache: 'no-store' });
+      setData(await r2.json());
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : 'Sending failed');
+    } finally {
+      setInviting(false);
+    }
+  };
+
   const exportCsv = () => {
     const header = ['name', 'email', 'role', 'handle', 'category', 'joined'];
     const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
@@ -81,11 +108,17 @@ export default function AdminWaitlistPage() {
           <h1 className="text-2xl font-bold">Waitlist</h1>
           <p className="text-zinc-400 mt-1">Everyone who has signed up on the landing page.</p>
         </div>
+        <div className="flex gap-3">
+        <button type="button" onClick={sendInvites} disabled={inviting || !data} className="rounded-lg bg-green-500 px-4 py-2 text-sm font-bold text-black disabled:opacity-60">
+          {inviting ? 'Sending…' : 'Send early-access email'}
+        </button>
         <button type="button" onClick={exportCsv} disabled={!rows.length} className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold">
           Export CSV
         </button>
+        </div>
       </div>
 
+      {notice && <p className="mb-6 rounded-lg border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm">{notice}</p>}
       {error && <p className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">{error}</p>}
 
       {data && (

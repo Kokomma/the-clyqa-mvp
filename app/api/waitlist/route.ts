@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { FieldValue } from 'firebase-admin/firestore';
 import { adminDb } from '@/lib/firebase-admin';
 import { validateWaitlistInput, waitlistDocId, WAITLIST_COLLECTION } from '@/lib/waitlist';
+import { sendEmail, confirmationEmail } from '@/lib/email';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -61,6 +62,14 @@ export async function POST(request: Request) {
       source: 'landing',
       createdAt: FieldValue.serverTimestamp(),
     });
+
+    // Confirmation goes to everyone who signs up. A failed send doesn't undo the sign-up.
+    try {
+      const mail = confirmationEmail(data.name);
+      await sendEmail({ ...mail, to: data.email });
+    } catch (err) {
+      console.error('confirmation email failed', err);
+    }
     return NextResponse.json({ ok: true, duplicate: false }, { status: 201 });
   } catch (err) {
     console.error('waitlist signup failed', err);
